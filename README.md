@@ -1,5 +1,25 @@
 # Report for Software Engineering for AI-Enabled System
 
+- [Report for Software Engineering for AI-Enabled System](#report-for-software-engineering-for-ai-enabled-system)
+  - [Section 1: ML Model Implementation](#section-1-ml-model-implementation)
+    - [Task 1.1: ML Canvas Design](#task-11-ml-canvas-design)
+    - [Task 1.2: Model Training Implementation](#task-12-model-training-implementation)
+      - [Input data](#input-data)
+      - [Fine-tuning loop](#fine-tuning-loop)
+      - [Validation methodology](#validation-methodology)
+        - [Validation During Fine-Tuning](#validation-during-fine-tuning)
+        - [Post-Fine-Tuning Evaluation](#post-fine-tuning-evaluation)
+    - [Task 1.4: Model Versioning and Experimentation](#task-14-model-versioning-and-experimentation)
+    - [Task 1.5 + 1.6: Model Explainability + Prediction Reasoning](#task-15--16-model-explainability--prediction-reasoning)
+      - [Traceable Prompting](#traceable-prompting)
+    - [Task 1.7: Model Deployment as a Service](#task-17-model-deployment-as-a-service)
+  - [Section 2: UI-Model Interface](#section-2-ui-model-interface)
+    - [Task 2.1 UI design](#task-21-ui-design)
+    - [Task 2.2: Demonstration](#task-22-demonstration)
+      - [Interface Testing and Implementation](#interface-testing-and-implementation)
+        - [Challenges](#challenges)
+
+
 ## Section 1: ML Model Implementation
 
 ### Task 1.1: ML Canvas Design
@@ -17,7 +37,7 @@ The Feedback section outlines how the model will learn over time by tracking met
 
 ### Task 1.2: Model Training Implementation
 
-I did not train the LLM model by myself but instead, I do fine-tuning on gemini-2.0-flash-lite-001 in vertex AI platform with supervised learning approach.
+I did not train the LLM model by myself but instead, I do fine-tuning on `gemini-2.0-flash-lite-001` in vertex AI platform with supervised learning approach.
 
 #### Input data
 
@@ -28,16 +48,16 @@ Here is example of training data I use to fine-tune the model:
 It is in JSONL or JSONLines format which suitable for large scale training data, these datas are combination from two sources
 1. Collected from my pipeline service
 - Combine the data output from pipeline with specific prompt to create user role and define the target canonical dataset for model role
-2. Generate with Gemini 2.5 Flash Preview 04-17 with this prompt
+2. Generate with `Gemini 2.5 Flash Preview 04-17` with this prompt
 - Craft prompt to more synthetic datas and cover more cases
 
 We need to do data generation because pipeline process take a lot of time to scrape data from web.
 
 Separate into 3 versions
 
-- `train-1.jsonl`: 1 samples (2207 tokens)
-- `train-2.jsonl`: 19 samples (33320 tokens) + 12 samples `evluation.jsonl`
-- `train-3.jsonl`: 25 samples (43443 tokens) + 12 samples `evluation.jsonl`
+- [`train-1.jsonl`](data/train/train-1.jsonl): 1 samples (2207 tokens)
+- [`train-2.jsonl`](data/train/train-2.jsonl): 19 samples (33320 tokens) + 12 samples `evluation.jsonl`
+- [`train-3.jsonl`](data/train/train-3.jsonl): 25 samples (43443 tokens) + 12 samples `evluation.jsonl`
 
 #### Fine-tuning loop
 
@@ -63,8 +83,8 @@ During fine-tuning, if we provide evaluation data, Vertex AI will calculate the 
 
 We approach two methods
 
-1. JSON Syntactic Validity: Parse generated json string with json.loads()
-2. Pydantic Schema Conformance: If the generated output is valid JSON, try to instantiate your CanonicalRecord Pydantic model with the parsed dictionary: CanonicalRecord(**parsed_generated_json).
+1. JSON Syntactic Validity: Parse generated json string with `json.loads()`
+2. Pydantic Schema Conformance: If the generated output is valid JSON, try to instantiate on [`CanonicalRecord Pydantic model`](schemas/canonical.py) with the parsed dictionary: `CanonicalRecord(**parsed_generated_json)`.
 
 To calculate the metrics, I run the following code
 
@@ -173,5 +193,15 @@ We don't have any UI to gain feedback from user at this time, but we plan to add
 
 ### Task 2.2: Demonstration
 
-#### UI - Model Interface Design
 #### Interface Testing and Implementation
+
+Here is the successful interaction between input data with vary sources (api, file, scraped) to unified canonical record.
+
+```json
+
+```
+
+##### Challenges
+
+1. Prompt is not dynamically change based on pydantic model.
+   - We found out that we can embeded the pydantic schema into prompt directly so it can update automatically when we change the pydantic model.
