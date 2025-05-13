@@ -1,0 +1,12 @@
+{
+    "json_validity_count": {
+        "projects/83228855505/locations/us-central1/endpoints/7340996035474358272": 11,
+        "projects/83228855505/locations/us-central1/endpoints/5289606405207097344": 12,
+        "projects/83228855505/locations/us-central1/endpoints/7800363197466148864": 12
+    },
+    "pydantic_validity_count": {
+        "projects/83228855505/locations/us-central1/endpoints/7340996035474358272": 7,
+        "projects/83228855505/locations/us-central1/endpoints/5289606405207097344": 0,
+        "projects/83228855505/locations/us-central1/endpoints/7800363197466148864": 0
+    }
+}
