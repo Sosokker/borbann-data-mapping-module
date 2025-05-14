@@ -32,3 +32,24 @@ uv run evaluate.py
 gcloud auth application-default login
 uv run explainability.py
 ```
+
+## Input data gathering
+
+To get the input data from pipeline service, you need to run the pipeline service first.
+
+```bash
+git clone https://github.com/borbann-platform/backend-api.git
+cd backend-api/pipeline
+
+uv sync
+uv run main.py
+```
+
+The navigate to `127.0.0.1:8000/docs` to see the API documentation.
+In the swagger documentation, you follow these steps
+
+1. Create a new pipeline with preferred configuration
+2. Go to `/pipeline/{pipeline_id}/run` and run the pipeline
+3. Wait for the pipeline to finish
+4. Go to `/pipeline/{pipeline_id}/result` to get the result
+5. Copy the result
