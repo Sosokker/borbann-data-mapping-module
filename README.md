@@ -388,6 +388,12 @@ Anyway, I will show the prompting input and result through Vertex AI platform. H
 ![vertex](assets/vertex/1.png)
 ![vertex](assets/vertex/2.png)
 
+The result of the model will be used by this UI component below, which is data schema mapping result present to user.
+
+![ui](assets/ui/pipeline-3.png)
+
+The green label indicate the data mapping model output.
+
 ##### Challenges
 
 1. Prompt is not dynamically change based on pydantic model.
